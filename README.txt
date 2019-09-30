@@ -11,7 +11,7 @@ The function SGLRO runs the SGLRO algorithm, see the file SGLRO.m for a list of 
 
 The examples folder contains code for all the examples from Rudnick-Cohen et al. 2019, which demonstrate how to use SGLRO.m.
 
-Sample code is provided for several other robust optimization approaches if you wish to compare results against them. Note that the code for these implementations is a bit messy relative to the SGLRO implementation.
+Sample code is provided for several other robust optimization approaches if you wish to compare results against them. Note that the code for these implementations is a bit messy relative to the SGLRO implementation provided.
 
 If you use this project in an academic work, please cite this project using its associated journal publication:
 
