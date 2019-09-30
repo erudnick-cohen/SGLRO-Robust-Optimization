@@ -1,7 +1,7 @@
 Non-Convex Robust Opimization Algorthm: Scenario Generation with Local Robust Optimization (SGLRO)
 
 Robust optimization is a type of optimization that accounts for uncertainty by finding a solution which is feasible under all possible uncertain parameter values. 
-This project implements a solver for robust optimization problems which contain non-convex objective functions or constraints.
+This project implements a solver for robust optimization problems which contain non-convex constraints.
 
 
 This is an implementation of the Scenario Generation with Local Robust Optimization (SGLRO) algorithm presented in Rudnick-Cohen et al. 2019.
