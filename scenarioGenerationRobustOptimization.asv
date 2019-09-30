@@ -1,0 +1,63 @@
+function [xBest, activeList, gradOut,hessOut ] = scenarioGenerationRobustOptimization(...
+    objfun,constraintList,IC,xLB,xUB, uLB,uUB, uDomainConstrList, itercount,rScenFun)
+%objective function is the objective function as a function of x and u,
+%however note that this code will not handle objective robustness
+%constraint list is a list of constraints as function handles of x and u
+%LBs and UBs are bounds for each variable
+%uDomainConstrList is the list of additional constraints defining the
+%domain of possible scenarios
+%N is the maximum number of scenarios to consider
+%itercount is the number of iterations to run before stopping
+remainingIterCount = itercount;
+
+%define some global variables for performance tracking
+global solHist;
+solHist = {};
+global infeasHist;
+infeasHist = {};
+global worstHist;
+worstHist = {}
+
+%transform objective function into an uncertain constraint by adding in one
+%variable to the problem and one new contraint that defines that variable
+%as the objective function, this needs to be done for computing 
+lenA = 0;
+if(remainingIterCount > 0)
+    activeList = {};
+    xBest = IC;
+    %Solve scenario robust optimization problem with no scenarios
+    disp('Generating initial solution')
+    [xBest, bCost,gradOut,hessOut] = SolveScenarioRobustOptimization(...
+                xBest, objfun, {}, constraintList,xLB, xUB,xUB);
+    while remainingIterCount > 0
+        
+        %find new infeasible scenario, do not consider objective function
+        disp('Finding new infeasible solution')
+        activeList = GenerateScenarios(...
+            xBest, activeList, constraintList, uUB,uLB,uDomainConstrList,rScenFun);
+
+
+        
+        if(lenA ~= length(activeList))
+                %Solve scenario robust optimization problem with current
+                %set of scenarios
+                [xBest, bCost,gradOut,hessOut] = SolveScenarioRobustOptimization(...
+                    xBest, objfun, activeList, constraintList,xLB, xUB,IC);
+            disp('Current best robust cost seems to be')
+            bCost
+            %get lengths of each scenario list, to find out when a scenario
+            %gets added
+            lenA = length(activeList);
+        end
+        %
+        remainingIterCount = remainingIterCount - 1;
+    end
+else
+    %if we could not find a feasible solution at all for any scenario
+    xBest = nan;
+    activeList = [];
+end
+
+
+end
+
